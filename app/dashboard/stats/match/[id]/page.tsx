@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
-import { LogOut } from "lucide-react"
+import { BarChart, BarChart2, LogOut, TrendingUp, Users } from "lucide-react"
 
 // Estructura del partido
 type Match = {
@@ -75,10 +75,15 @@ export default function MatchDetailsPage() {
   }, [params.id, router])
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const hours = Math.floor(mins / 60)
-    const remainingMins = mins % 60
-    return `${hours}h ${remainingMins}m`
+    // Horas = total de segundos / 3600
+    const hours = Math.floor(seconds / 3600)
+    // Minutos = lo que sobra después de quitar las horas, / 60
+    const mins = Math.floor((seconds % 3600) / 60)
+    // Segundos = lo que sobra después de quitar minutos
+    const secs = seconds % 60
+  
+    // Retorno en formato “HHh MMm SSs”
+    return `${hours}h ${mins}m ${secs}s`
   }
 
   if (!match) {
@@ -110,7 +115,44 @@ export default function MatchDetailsPage() {
       <div className="flex flex-1">
         {/* Podrías reusar tu Sidebar de stats si gustas */}
         <aside className="w-64 border-r bg-muted/40 hidden lg:block">
-          {/* ... */}
+          <nav className="flex flex-col gap-2 p-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" className="w-full justify-start">
+                <BarChart2 className="mr-2 h-4 w-4" />
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/dashboard/players">
+              <Button variant="ghost" className="w-full justify-start">
+                <Users className="mr-2 h-4 w-4" />
+                Jugadores
+              </Button>
+            </Link>
+            <Link href="/dashboard/match/setup">
+              <Button variant="ghost" className="w-full justify-start">
+                <Users className="mr-2 h-4 w-4" />
+                Nuevo Partido
+              </Button>
+            </Link>
+            <Link href="/dashboard/stats">
+              <Button variant="ghost" className="w-full justify-start font-bold">
+                <BarChart className="mr-2 h-4 w-4" />
+                Estadísticas
+              </Button>
+            </Link>
+            <Link href="/dashboard/stats/compare">
+              <Button variant="ghost" className="w-full justify-start">
+                <TrendingUp className="mr-2 h-4 w-4" />
+                Comparar Jugadores
+              </Button>
+            </Link>
+            <Link href="/dashboard/stats/best-team">
+              <Button variant="ghost" className="w-full justify-start">
+                <Users className="mr-2 h-4 w-4" />
+                Mejor Equipo
+              </Button>
+            </Link>
+          </nav>
         </aside>
 
         <main className="flex-1 p-4 md:p-6">

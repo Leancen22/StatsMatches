@@ -53,6 +53,8 @@ export default function StatsPage() {
         const resPlayers = await fetch("/api/stats/players")
         if (!resPlayers.ok) throw new Error("Error al obtener jugadores")
         const playersData = await resPlayers.json()
+
+        console.log("playersData", playersData)
   
         // 2) Cargar partidos
         const resMatches = await fetch("/api/stats/matches")
@@ -75,10 +77,15 @@ export default function StatsPage() {
 
   // Función para formatear el tiempo (segundos a HH:MM)
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const hours = Math.floor(mins / 60)
-    const remainingMins = mins % 60
-    return `${hours}h ${remainingMins}m`
+    // Horas = total de segundos / 3600
+    const hours = Math.floor(seconds / 3600)
+    // Minutos = lo que sobra después de quitar las horas, / 60
+    const mins = Math.floor((seconds % 3600) / 60)
+    // Segundos = lo que sobra después de quitar minutos
+    const secs = seconds % 60
+  
+    // Retorno en formato “HHh MMm SSs”
+    return `${hours}h ${mins}m ${secs}s`
   }
 
   // Función para ordenar jugadores según la estadística seleccionada
@@ -348,9 +355,11 @@ export default function StatsPage() {
                               </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button variant="outline" size="sm">
-                                Ver Detalles
-                              </Button>
+                            <Link href={`/dashboard/stats/match/${match.id}`}>
+                            <Button variant="outline" size="sm">
+          Ver Detalles
+        </Button>
+                              </Link>
                             </TableCell>
                           </TableRow>
                         ))}

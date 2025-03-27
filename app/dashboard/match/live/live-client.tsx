@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pause, Play, Save, RefreshCw } from "lucide-react"
+import { Volleyball, Hand, Shield, XCircle } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -428,7 +429,8 @@ export default function LiveClientComponent() {
                             }
                           >
                             <span className="sr-only">Gol</span>
-                            <span className="text-lg font-bold">G</span>
+                            {/* <span className="text-lg font-bold">G</span> */}
+                            <Volleyball className="h-6 w-6" />
                           </Button>
                           <Button
                             variant="outline"
@@ -439,7 +441,8 @@ export default function LiveClientComponent() {
                             }
                           >
                             <span className="sr-only">Asistencia</span>
-                            <span className="text-lg font-bold">A</span>
+                            {/* <span className="text-lg font-bold">A</span> */}
+                            <Hand className="h-6 w-6" />
                           </Button>
                           <Button
                             variant="outline"
@@ -450,7 +453,8 @@ export default function LiveClientComponent() {
                             }
                           >
                             <span className="sr-only">Atajada</span>
-                            <span className="text-lg font-bold">S</span>
+                            {/* <span className="text-lg font-bold">S</span> */}
+                            <Shield className="h-6 w-6" />
                           </Button>
                           <Button
                             variant="outline"
@@ -461,7 +465,8 @@ export default function LiveClientComponent() {
                             }
                           >
                             <span className="sr-only">Pérdida</span>
-                            <span className="text-lg font-bold">P</span>
+                            {/* <span className="text-lg font-bold">P</span> */}
+                            <XCircle className="h-6 w-6" />
                           </Button>
                         </div>
                       </TableCell>

@@ -59,10 +59,15 @@ export default function ComparePlayersPage() {
 
   // Función para formatear el tiempo (segundos a HH:MM)
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const hours = Math.floor(mins / 60)
-    const remainingMins = mins % 60
-    return `${hours}h ${remainingMins}m`
+    // Horas = total de segundos / 3600
+    const hours = Math.floor(seconds / 3600)
+    // Minutos = lo que sobra después de quitar las horas, / 60
+    const mins = Math.floor((seconds % 3600) / 60)
+    // Segundos = lo que sobra después de quitar minutos
+    const secs = seconds % 60
+  
+    // Retorno en formato “HHh MMm SSs”
+    return `${hours}h ${mins}m ${secs}s`
   }
 
   // Función para calcular la eficiencia

@@ -27,6 +27,9 @@ export async function GET() {
         totalSaves += mp.saves
         totalTurnovers += mp.turnovers
         totalPlayTime += mp.playTime
+        console.log(
+          `stats-players: PlayerId=${p.id}, MatchPlayerId=${mp.id}, playTime=${mp.playTime}`
+        )
       })
 
       // Promedios (evitar /0)
