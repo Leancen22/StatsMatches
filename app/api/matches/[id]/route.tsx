@@ -2,12 +2,12 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-interface Context {
-  params: { id: string }
-}
+// interface Context {
+//   params: { id: string }
+// }
 
 // GET /api/matches/[id]
-export async function GET(request: Request, { params }: Context) {
+export async function GET(request: Request, { params }: { params: { id: string }}) {
   try {
     const matchId = Number(params.id)
     const match = await prisma.match.findUnique({
@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: Context) {
 }
 
 // PATCH /api/matches/[id]
-export async function PATCH(request: Request, { params }: Context) {
+export async function PATCH(request: Request, { params }:  { params: { id: string }}) {
   try {
     const matchId = Number(params.id)
     const { updatedStats } = await request.json()
