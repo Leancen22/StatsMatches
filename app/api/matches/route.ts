@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         location,
         // Creamos la relación con MatchPlayers para cada jugador seleccionado
         matchPlayers: {
-          create: selectedPlayers.map((p) => ({
+          create: selectedPlayers.map((p: any) => ({
             playerId: p.id, // asumimos que el Player ya existe en DB
             // Estadísticas iniciales en 0
             goals: 0,
@@ -38,6 +38,7 @@ export async function POST(request: Request) {
             saves: 0,
             turnovers: 0,
             playTime: 0,
+            starter: p.starter,
             // Podríamos guardar también un campo "starter" si quisieras
           })),
         },
