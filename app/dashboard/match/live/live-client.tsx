@@ -41,6 +41,7 @@ type MatchPlayerDB = {
   saves: number
   turnovers: number
   playTime: number
+  starter: boolean
   player: PlayerDB
 }
 
@@ -110,7 +111,7 @@ export default function LiveClientComponent() {
           name: mp.player.name,
           position: mp.player.position,
           number: mp.player.number,
-          playing: false,
+          playing: mp.starter,
           stats: {
             goals: mp.goals,
             assists: mp.assists,
