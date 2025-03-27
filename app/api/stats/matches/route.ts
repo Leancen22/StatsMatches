@@ -13,7 +13,7 @@ export async function GET() {
 
     // Si 'result' no está en la DB, un ejemplo de "construir" un result:
     // (Esto es opcional, depende de tu lógica real)
-    const data = matches.map((m) => {
+    const data = matches.map((m: any) => {
       // Ejemplo: si no tienes 'result' en la BD, pones "???".
       return {
         id: m.id,
