@@ -2,19 +2,12 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// interface Context {
-//   params: { id: string }
-// }
-type RouteContext = {
-  params: {
-    id: string
-  }
-}
+
 
 // GET /api/matches/[id]
-export async function GET(request: Request, { params }: RouteContext) {
+export async function GET(request: Request, { params }: any) {
   try {
-    const matchId = Number(params.id)
+    const matchId = parseInt(params.id)
     const match = await prisma.match.findUnique({
       where: { id: matchId },
       include: {
@@ -36,9 +29,9 @@ export async function GET(request: Request, { params }: RouteContext) {
 }
 
 // PATCH /api/matches/[id]
-export async function PATCH(request: Request, { params }: RouteContext) {
+export async function PATCH(request: Request, { params }: any) {
   try {
-    const matchId = Number(params.id)
+    const matchId = parseInt(params.id)
     const { updatedStats } = await request.json()
     // updatedStats es un array de objetos con { matchPlayerId, goals, assists, saves, turnovers, playTime }
 

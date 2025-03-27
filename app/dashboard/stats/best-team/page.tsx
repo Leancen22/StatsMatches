@@ -104,7 +104,7 @@ export default function BestTeamPage() {
   }
 
   // 4. Obtener el mejor equipo
-  const getBestTeam = () => {
+  function getBestTeam() : PlayerStats[] {
     // Necesitamos 1 portero, 2 laterales, 1 central y 1 pivote
     const sortedByPosition = {
       Portero: players.filter((p) => p.position === "Portero").sort((a, b) => b.score - a.score),
@@ -114,7 +114,7 @@ export default function BestTeamPage() {
       Extremo: players.filter((p) => p.position === "Extremo").sort((a, b) => b.score - a.score),
     }
 
-    const bestTeam = [
+    const bestTeam: (PlayerStats | undefined)[] = [
       sortedByPosition.Portero[0],
       sortedByPosition.Lateral[0],
       sortedByPosition.Lateral[1],
@@ -126,12 +126,17 @@ export default function BestTeamPage() {
     for (let i = 0; i < bestTeam.length; i++) {
       if (!bestTeam[i]) {
         const allSorted = [...players].sort((a, b) => b.score - a.score)
-        bestTeam[i] = allSorted.find((p) => !bestTeam.includes(p))
+        // find(...) puede retornar undefined también
+        const candidate = allSorted.find((p) => !bestTeam.includes(p))
+        // Asignamos solo si candidate existe
+        if (candidate) {
+          bestTeam[i] = candidate
+        }
       }
     }
 
     // Filtramos nulos por si alguna posición ni con backup
-    return bestTeam.filter(Boolean)
+    return bestTeam.filter(Boolean) as PlayerStats[];
   }
 
   const bestTeam = getBestTeam()
