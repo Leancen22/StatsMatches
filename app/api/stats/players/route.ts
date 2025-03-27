@@ -13,7 +13,7 @@ export async function GET() {
     })
 
     // Transformamos
-    const data = players.map((p) => {
+    const data = players.map((p: any) => {
       const totalMatches = p.matches.length
       let totalGoals = 0
       let totalAssists = 0
@@ -21,7 +21,7 @@ export async function GET() {
       let totalTurnovers = 0
       let totalPlayTime = 0
 
-      p.matches.forEach((mp) => {
+      p.matches.forEach((mp: any) => {
         totalGoals += mp.goals
         totalAssists += mp.assists
         totalSaves += mp.saves
