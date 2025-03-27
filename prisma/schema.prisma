@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Player {
+  id       Int      @id @default(autoincrement())
+  name     String
+  position String
+  number   Int
+
+  // (Opcional) Campos con estadísticas acumuladas
+  totalGoals     Int @default(0)
+  totalAssists   Int @default(0)
+  totalSaves     Int @default(0)
+  totalTurnovers Int @default(0)
+
+  matches  MatchPlayer[]
+}
+
+model Match {
+  id          Int           @id @default(autoincrement())
+  opponent    String
+  date        DateTime
+  location    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  matchPlayers MatchPlayer[]
+}
+
+model MatchPlayer {
+  id        Int     @id @default(autoincrement())
+  matchId   Int
+  playerId  Int
+  goals     Int     @default(0)
+  assists   Int     @default(0)
+  saves     Int     @default(0)
+  turnovers Int     @default(0)
+  playTime  Int     @default(0) // segundos jugados
+
+  match  Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([matchId])
+  @@index([playerId])
+}
