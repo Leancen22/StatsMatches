@@ -5,9 +5,14 @@ import { prisma } from '@/lib/prisma'
 // interface Context {
 //   params: { id: string }
 // }
+type RouteContext = {
+  params: {
+    id: string
+  }
+}
 
 // GET /api/matches/[id]
-export async function GET(request: Request, { params }: { params: { id: string }}) {
+export async function GET(request: Request, { params }: RouteContext) {
   try {
     const matchId = Number(params.id)
     const match = await prisma.match.findUnique({
@@ -31,7 +36,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PATCH /api/matches/[id]
-export async function PATCH(request: Request, { params }:  { params: { id: string }}) {
+export async function PATCH(request: Request, { params }: RouteContext) {
   try {
     const matchId = Number(params.id)
     const { updatedStats } = await request.json()
