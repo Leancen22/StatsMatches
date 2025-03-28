@@ -1,20 +1,18 @@
-// app/dashboard/field/page.tsx
 "use client";
-
+import dynamic from "next/dynamic";
 import React from "react";
-import FieldBoard from "./FieldBoard";
 
+const FieldBoard = dynamic(() => import("../field/FieldBoard"), {
+  ssr: false,
+  loading: () => <div>Cargando tablero...</div>,
+});
 
 export default function FieldPage() {
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex flex-col h-screen">
      
-
-      {/* CONTENIDO */}
-        
-
-        {/* MAIN */}
-        <main className="flex-1">
+      {/* CONTENIDO: Tablero ocupando todo el espacio */}
+      <main className="flex-1">
         <FieldBoard />
       </main>
     </div>

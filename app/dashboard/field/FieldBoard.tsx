@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 // Jugadores iniciales (cada uno con su color)
 const initialPlayers = [
   { id: 1, x: 50, y: 50, name: "Jugador 1", color: "blue" },
-  { id: 2, x: 50, y: 120, name: "Jugador 2", color: "green" },
+  { id: 2, x: 50, y: 120, name: "Jugador 2", color: "black" },
   { id: 3, x: 50, y: 190, name: "Jugador 3", color: "orange" },
   { id: 4, x: 50, y: 260, name: "Jugador 4", color: "purple" },
   { id: 5, x: 50, y: 330, name: "Jugador 5", color: "red" },
