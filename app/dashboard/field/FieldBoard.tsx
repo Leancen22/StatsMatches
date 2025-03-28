@@ -212,7 +212,7 @@ export default function FieldBoard() {
               key={player.id}
               x={player.x}
               y={player.y}
-              radius={20}
+              radius={30}
               fill={player.color}
               draggable={tool === "select"}
               onDragEnd={(e) => handleDragEnd(e, player.id)}
