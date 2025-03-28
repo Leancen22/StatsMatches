@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BarChart2, LogOut, Users, TrendingUp, BarChart } from "lucide-react"
+import { BarChart2, LogOut, Users, TrendingUp, BarChart, Eye } from "lucide-react"
 
 type PlayerStats = {
   id: number
@@ -141,6 +141,12 @@ export default function DashboardPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-4 w-4" />
                 Mejor Equipo
+              </Button>
+            </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
               </Button>
             </Link>
           </nav>

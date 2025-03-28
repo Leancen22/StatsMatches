@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BarChart, BarChart2, LogOut, Users, TrendingUp } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Users, TrendingUp, Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 // Tipos
@@ -164,6 +164,12 @@ export default function StatsPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-4 w-4" />
                 Mejor Equipo
+              </Button>
+            </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
               </Button>
             </Link>
           </nav>

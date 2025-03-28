@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { BarChart, BarChart2, LogOut, Plus, TrendingUp, Users } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Plus, TrendingUp, Users, Eye } from "lucide-react"
 
 // Tipo para los jugadores que llegan del backend
 type Player = {
@@ -127,6 +127,12 @@ export default function PlayersPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-4 w-4" />
                 Mejor Equipo
+              </Button>
+            </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
               </Button>
             </Link>
           </nav>

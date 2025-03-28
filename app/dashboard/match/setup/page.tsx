@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { BarChart, BarChart2, LogOut, Play, TrendingUp, UserPlus, Users } from "lucide-react"
+import { BarChart, BarChart2, Eye, LogOut, Play, TrendingUp, UserPlus, Users } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 // Tipo en DB
@@ -216,6 +216,12 @@ export default function MatchSetupPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-4 w-4" />
                 Mejor Equipo
+              </Button>
+            </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
               </Button>
             </Link>
           </nav>

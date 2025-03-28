@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
-import { BarChart, BarChart2, LogOut, TrendingUp, Users } from "lucide-react"
+import { BarChart, BarChart2, Eye, LogOut, TrendingUp, Users } from "lucide-react"
 
 // Estructura del partido
 type Match = {
@@ -150,6 +150,12 @@ export default function MatchDetailsPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Users className="mr-2 h-4 w-4" />
                 Mejor Equipo
+              </Button>
+            </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
               </Button>
             </Link>
           </nav>

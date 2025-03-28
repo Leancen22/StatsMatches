@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BarChart, BarChart2, LogOut, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Minus } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Minus, Eye } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 
 // Tipos
@@ -174,6 +174,12 @@ export default function ComparePlayersPage() {
                     Mejor Equipo
                   </Button>
                 </Link>
+                <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
+              </Button>
+            </Link>
               </div>
             </div>
 
