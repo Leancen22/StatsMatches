@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
-import { BarChart, BarChart2, Eye, LogOut, TrendingUp, Users } from "lucide-react"
+import { BarChart, BarChart2, Eye, LogOut, MailIcon, TrendingUp, Users } from "lucide-react"
 import DarkModeToggle from "@/components/DarkModeToggle"
 
 // Estructura del partido
@@ -160,6 +160,13 @@ export default function MatchDetailsPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Eye className="mr-2 h-4 w-4" />
                 Analisis de Campo
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/mass-email">
+              <Button variant="ghost" className="w-full justify-start">
+                <MailIcon className="mr-2 h-4 w-4" />
+                Convocatoria
               </Button>
             </Link>
           </nav>

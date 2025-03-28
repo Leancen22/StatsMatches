@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { BarChart, BarChart2, LogOut, Plus, TrendingUp, Users, Eye } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Plus, TrendingUp, Users, Eye, MailIcon } from "lucide-react"
 import DarkModeToggle from "@/components/DarkModeToggle"
 
 // Tipo para los jugadores que llegan del backend
@@ -137,6 +137,12 @@ export default function PlayersPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Eye className="mr-2 h-4 w-4" />
                 Analisis de Campo
+              </Button>
+            </Link>
+            <Link href="/dashboard/mass-email">
+              <Button variant="ghost" className="w-full justify-start">
+                <MailIcon className="mr-2 h-4 w-4" />
+                Convocatoria
               </Button>
             </Link>
           </nav>

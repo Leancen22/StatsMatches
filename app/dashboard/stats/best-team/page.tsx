@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BarChart, BarChart2, LogOut, Users, TrendingUp, Trophy, Star, Eye } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Users, TrendingUp, Trophy, Star, Eye, MailIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import DarkModeToggle from "@/components/DarkModeToggle"
 
@@ -206,6 +206,13 @@ export default function BestTeamPage() {
               <Button variant="ghost" className="w-full justify-start">
                 <Eye className="mr-2 h-4 w-4" />
                 Analisis de Campo
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/mass-email">
+              <Button variant="ghost" className="w-full justify-start">
+                <MailIcon className="mr-2 h-4 w-4" />
+                Convocatoria
               </Button>
             </Link>
           </nav>

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BarChart, BarChart2, LogOut, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Minus, Eye } from "lucide-react"
+import { BarChart, BarChart2, LogOut, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Minus, Eye, MailIcon } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import DarkModeToggle from "@/components/DarkModeToggle"
 
@@ -165,6 +165,13 @@ export default function ComparePlayersPage() {
                 Analisis de Campo
               </Button>
             </Link>
+
+            <Link href="/dashboard/mass-email">
+                          <Button variant="ghost" className="w-full justify-start">
+                            <MailIcon className="mr-2 h-4 w-4" />
+                            Convocatoria
+                          </Button>
+                        </Link>
           </nav>
         </aside>
         <main className="flex-1 p-4 md:p-6">

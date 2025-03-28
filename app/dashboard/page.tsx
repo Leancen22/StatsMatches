@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BarChart2, LogOut, Users, TrendingUp, BarChart, Eye } from "lucide-react"
+import { BarChart2, LogOut, Users, TrendingUp, BarChart, Eye, MailIcon } from "lucide-react"
 import DarkModeToggle from "@/components/DarkModeToggle"
 
 type PlayerStats = {
@@ -153,6 +153,20 @@ export default function DashboardPage() {
                 Analisis de Campo
               </Button>
             </Link>
+            
+            <Link href="/dashboard/mass-email">
+              <Button variant="ghost" className="w-full justify-start">
+                <MailIcon className="mr-2 h-4 w-4" /> Convocatoria
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/mass-email">
+              <Button variant="ghost" className="w-full justify-start">
+                <MailIcon className="mr-2 h-4 w-4" />
+                Convocatoria
+              </Button>
+            </Link>
+
           </nav>
         </aside>
 

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import DarkModeToggle from "@/components/DarkModeToggle"
 
 export default function Home() {
   return (
@@ -7,7 +8,11 @@ export default function Home() {
       <header className="border-b">
         <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold">Handball Stats Tracker</h1>
+          
           <nav className="ml-auto flex gap-4">
+          <div className="mt-auto">
+                      <DarkModeToggle />
+                    </div>
             <Link href="/login">
               <Button>Iniciar Sesión</Button>
             </Link>
