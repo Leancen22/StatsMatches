@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
 import { BarChart, BarChart2, Eye, LogOut, TrendingUp, Users } from "lucide-react"
+import DarkModeToggle from "@/components/DarkModeToggle"
 
 // Estructura del partido
 type Match = {
@@ -101,6 +102,9 @@ export default function MatchDetailsPage() {
         <div className="container flex h-16 items-center px-4">
           <h1 className="text-lg font-semibold">Handball Stats Tracker</h1>
           <nav className="ml-auto flex gap-4">
+            <div className="mt-auto">
+                        <DarkModeToggle />
+                      </div>
             <Link href="/">
               <Button variant="outline" size="icon">
                 <LogOut className="h-4 w-4" />

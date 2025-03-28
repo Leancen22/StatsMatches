@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BarChart2, LogOut, Users, TrendingUp, BarChart, Eye } from "lucide-react"
+import DarkModeToggle from "@/components/DarkModeToggle"
 
 type PlayerStats = {
   id: number
@@ -93,6 +94,9 @@ export default function DashboardPage() {
         <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold">Handball Stats Tracker</h1>
           <nav className="ml-auto flex gap-4">
+          <div className="mt-auto">
+            <DarkModeToggle />
+          </div>
             <Link href="/">
               <Button variant="outline" size="icon">
                 <LogOut className="h-4 w-4" />

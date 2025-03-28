@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BarChart, BarChart2, LogOut, Users, TrendingUp, ArrowUpRight, ArrowDownRight, Minus, Eye } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
+import DarkModeToggle from "@/components/DarkModeToggle"
 
 // Tipos
 type PlayerStats = {
@@ -107,6 +108,9 @@ export default function ComparePlayersPage() {
         <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold">Handball Stats Tracker</h1>
           <nav className="ml-auto flex gap-4">
+            <div className="mt-auto">
+                        <DarkModeToggle />
+                      </div>
             <Link href="/">
               <Button variant="outline" size="icon">
                 <LogOut className="h-4 w-4" />

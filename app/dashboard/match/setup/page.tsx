@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { BarChart, BarChart2, Eye, LogOut, Play, TrendingUp, UserPlus, Users } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import DarkModeToggle from "@/components/DarkModeToggle"
 
 // Tipo en DB
 type DBPlayer = {
@@ -168,6 +169,9 @@ export default function MatchSetupPage() {
         <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold">Handball Stats Tracker</h1>
           <nav className="ml-auto flex gap-4">
+            <div className="mt-auto">
+                        <DarkModeToggle />
+                      </div>
             <Link href="/">
               <Button variant="outline" size="icon">
                 <LogOut className="h-4 w-4" />
