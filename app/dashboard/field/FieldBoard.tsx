@@ -5,22 +5,28 @@ import { Stage, Layer, Rect, Circle, Line, Image as KonvaImage } from "react-kon
 import useImage from "use-image";
 import { Button } from "@/components/ui/button";
 
-// Jugadores iniciales (cada uno con su color)
+// Jugadores iniciales (cada uno con color asignado)
 const initialPlayers = [
-  { id: 1, x: 50, y: 50, name: "Jugador 1", color: "blue" },
-  { id: 2, x: 50, y: 120, name: "Jugador 2", color: "black" },
-  { id: 3, x: 50, y: 190, name: "Jugador 3", color: "orange" },
-  { id: 4, x: 50, y: 260, name: "Jugador 4", color: "purple" },
-  { id: 5, x: 50, y: 330, name: "Jugador 5", color: "red" },
+  { id: 1, x: 20, y: 50, name: "Jugador 1", color: "blue" },
+  { id: 2, x: 20, y: 120, name: "Jugador 2", color: "black" },
+  { id: 3, x: 20, y: 190, name: "Jugador 3", color: "orange" },
+  { id: 4, x: 20, y: 260, name: "Jugador 4", color: "purple" },
+  { id: 5, x: 20, y: 330, name: "Jugador 5", color: "red" },
 ];
 
+// Definición del tipo para las líneas dibujadas
+type DrawnLine = {
+  points: number[];
+  color: string;
+  thickness: number;
+};
+
 export default function FieldBoard() {
-  // Referencia al contenedor para medir dimensiones
+  // Ref del contenedor para medir dimensiones
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
-  const [pixelRatio, setPixelRatio] = useState(1);
 
-  // Actualizamos las dimensiones del contenedor (ideal para tablet horizontal)
+  // Actualiza dimensiones al montar y en resize
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
@@ -31,16 +37,15 @@ export default function FieldBoard() {
       }
     };
     updateDimensions();
-    setPixelRatio(window.devicePixelRatio || 1);
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // El Stage ocupará todo el espacio disponible del contenedor
+  // Las dimensiones del Stage serán las del contenedor
   const stageWidth = dimensions.width;
   const stageHeight = dimensions.height;
 
-  // En este ejemplo, el "tablero" (campo) ocupará todo el Stage
+  // En este ejemplo, el "tablero" es el Stage completo, y la imagen de fondo lo cubre
   const boardX = 0;
   const boardY = 0;
   const boardWidth = stageWidth;
@@ -50,55 +55,57 @@ export default function FieldBoard() {
   const backgroundUrl = "/campo.jpg";
   const [bgImage] = useImage(backgroundUrl);
 
-  // Estados locales para jugadores, líneas y herramienta
+  // Estados para jugadores, líneas dibujadas y herramienta actual
   const [players, setPlayers] = useState(initialPlayers);
+  // tool: "select" para mover jugadores, "pencil" para dibujar
   const [tool, setTool] = useState<"select" | "pencil">("select");
-  const [lines, setLines] = useState<number[][]>([]);
-  const [currentLine, setCurrentLine] = useState<number[]>([]);
+  // Líneas ya dibujadas (cada línea guarda su color y grosor)
+  const [lines, setLines] = useState<DrawnLine[]>([]);
+  // Línea en dibujo actual, con puntos, color y grosor
+  const [currentLine, setCurrentLine] = useState<DrawnLine | null>(null);
+  // Configuración del pincel (para la herramienta lápiz)
   const [brushThickness, setBrushThickness] = useState(4);
   const [brushColor, setBrushColor] = useState("red");
 
-  // Actualiza la posición de un jugador al terminar de arrastrarlo
+  // Actualiza la posición de un jugador tras arrastrarlo
   const handleDragEnd = (e: any, id: number) => {
     const { x, y } = e.target.position();
     setPlayers((prev) =>
-      prev.map((player) =>
-        player.id === id ? { ...player, x, y } : player
-      )
+      prev.map((player) => (player.id === id ? { ...player, x, y } : player))
     );
   };
 
-  // Funciones para el modo lápiz
-  const handleMouseDown = (e: any) => {
+  // Funciones para modo lápiz (compatible con mouse y touch)
+  const startDrawing = (e: any) => {
     if (tool !== "pencil") return;
     const stage = e.target.getStage();
     const pos = stage.getPointerPosition();
-    if (pos) setCurrentLine([pos.x, pos.y]);
-  };
-
-  const handleMouseMove = (e: any) => {
-    if (tool !== "pencil" || currentLine.length === 0) return;
-    const stage = e.target.getStage();
-    const pos = stage.getPointerPosition();
-    if (pos) setCurrentLine([...currentLine, pos.x, pos.y]);
-  };
-
-  const handleMouseUp = () => {
-    if (tool !== "pencil") return;
-    if (currentLine.length > 0) {
-      setLines([...lines, currentLine]);
-      setCurrentLine([]);
+    if (pos) {
+      setCurrentLine({ points: [pos.x, pos.y], color: brushColor, thickness: brushThickness });
     }
   };
 
-  // Función para borrar todas las líneas dibujadas
-  const clearLines = () => {
-    setLines([]);
+  const continueDrawing = (e: any) => {
+    if (tool !== "pencil" || !currentLine) return;
+    const stage = e.target.getStage();
+    const pos = stage.getPointerPosition();
+    if (pos) {
+      setCurrentLine({
+        ...currentLine,
+        points: [...currentLine.points, pos.x, pos.y],
+      });
+    }
+  };
+
+  const finishDrawing = () => {
+    if (tool !== "pencil" || !currentLine) return;
+    setLines([...lines, currentLine]);
+    setCurrentLine(null);
   };
 
   return (
-    <div ref={containerRef} className="w-full h-full bg-gray-100">
-      {/* Barra de herramientas */}
+    <div ref={containerRef} className="w-full h-screen bg-gray-100">
+      {/* Barra de herramientas (puedes personalizarla) */}
       <div className="p-4 flex flex-wrap gap-4 justify-center">
         <Button
           onClick={() => setTool("select")}
@@ -112,7 +119,7 @@ export default function FieldBoard() {
         >
           Lápiz
         </Button>
-        <Button onClick={clearLines} variant="outline">
+        <Button onClick={() => setLines([])} variant="outline">
           Borrar Dibujo
         </Button>
         <div className="flex items-center gap-2">
@@ -148,13 +155,17 @@ export default function FieldBoard() {
       <Stage
         width={stageWidth}
         height={stageHeight}
-        onMouseDown={handleMouseDown}
-        onMousemove={handleMouseMove}
-        onMouseup={handleMouseUp}
-        pixelRatio={pixelRatio}
-        className="border"
+        // Soporte para eventos táctiles y de mouse
+        onMouseDown={startDrawing}
+        onTouchStart={startDrawing}
+        onMouseMove={continueDrawing}
+        onTouchMove={continueDrawing}
+        onMouseUp={finishDrawing}
+        onTouchEnd={finishDrawing}
+        pixelRatio={window.devicePixelRatio || 1}
+        style={{ border: "1px solid #ddd" }}
       >
-        {/* Capa 1: Fondo del tablero */}
+        {/* Capa 1: Fondo del tablero (imagen de fondo o rectángulo de respaldo) */}
         <Layer>
           {bgImage ? (
             <KonvaImage
@@ -165,13 +176,7 @@ export default function FieldBoard() {
               height={boardHeight}
             />
           ) : (
-            <Rect
-              x={boardX}
-              y={boardY}
-              width={boardWidth}
-              height={boardHeight}
-              fill="#f0f0f0"
-            />
+            <Rect x={boardX} y={boardY} width={boardWidth} height={boardHeight} fill="#f0f0f0" />
           )}
         </Layer>
 
@@ -180,19 +185,19 @@ export default function FieldBoard() {
           {lines.map((line, i) => (
             <Line
               key={i}
-              points={line}
-              stroke={brushColor}
-              strokeWidth={brushThickness}
+              points={line.points}
+              stroke={line.color}
+              strokeWidth={line.thickness}
               tension={0.5}
               lineCap="round"
               lineJoin="round"
             />
           ))}
-          {currentLine.length > 0 && (
+          {currentLine && (
             <Line
-              points={currentLine}
-              stroke={brushColor}
-              strokeWidth={brushThickness}
+              points={currentLine.points}
+              stroke={currentLine.color}
+              strokeWidth={currentLine.thickness}
               tension={0.5}
               lineCap="round"
               lineJoin="round"

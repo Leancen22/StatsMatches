@@ -1,17 +1,16 @@
 "use client";
-import dynamic from "next/dynamic";
-import React from "react";
 
-const FieldBoard = dynamic(() => import("../field/FieldBoard"), {
-  ssr: false,
-  loading: () => <div>Cargando tablero...</div>,
-});
+import React from "react";
+import FieldBoard from "../field/FieldBoard"; // Asegúrate de que la ruta sea la correcta
+import { Button } from "@/components/ui/button";
+import { LogOut, BarChart2, Users, TrendingUp, BarChart } from "lucide-react";
+import Link from "next/link";
 
 export default function FieldPage() {
   return (
     <div className="flex flex-col h-screen">
-     
-      {/* CONTENIDO: Tablero ocupando todo el espacio */}
+      
+      {/* MAIN: Tablero que ocupa todo el espacio */}
       <main className="flex-1">
         <FieldBoard />
       </main>
