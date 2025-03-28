@@ -160,12 +160,7 @@ export default function DashboardPage() {
               </Button>
             </Link>
 
-            <Link href="/dashboard/mass-email">
-              <Button variant="ghost" className="w-full justify-start">
-                <MailIcon className="mr-2 h-4 w-4" />
-                Convocatoria
-              </Button>
-            </Link>
+        
 
           </nav>
         </aside>
