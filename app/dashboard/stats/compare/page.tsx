@@ -155,6 +155,12 @@ export default function ComparePlayersPage() {
                 Mejor Equipo
               </Button>
             </Link>
+            <Link href="/dashboard/field">
+              <Button variant="ghost" className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Analisis de Campo
+              </Button>
+            </Link>
           </nav>
         </aside>
         <main className="flex-1 p-4 md:p-6">
@@ -174,12 +180,7 @@ export default function ComparePlayersPage() {
                     Mejor Equipo
                   </Button>
                 </Link>
-                <Link href="/dashboard/field">
-              <Button variant="ghost" className="w-full justify-start">
-                <Eye className="mr-2 h-4 w-4" />
-                Analisis de Campo
-              </Button>
-            </Link>
+                
               </div>
             </div>
 
