@@ -1,42 +1,32 @@
 // app/api/matches/[id]/route.ts
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-
-
 // GET /api/matches/[id]
 export async function GET(request: Request, { params }: any) {
-  try {
-    const matchId = parseInt(params.id)
-    const match = await prisma.match.findUnique({
-      where: { id: matchId },
-      include: {
-        matchPlayers: {
-          include: {
-            player: true, // para obtener name, position, number, etc.
-          },
-        },
+  const matchId = parseInt(params.id)
+  const match = await prisma.match.findUnique({
+    where: { id: matchId },
+    include: {
+      matchPlayers: {
+        include: { player: true },
       },
-    })
-    if (!match) {
-      return new NextResponse('Partido no encontrado', { status: 404 })
-    }
-    return NextResponse.json({ match })
-  } catch (error) {
-    console.error(error)
-    return new NextResponse('Error al obtener partido', { status: 500 })
+    },
+  })
+  if (!match) {
+    return new NextResponse('Partido no encontrado', { status: 404 })
   }
+  return NextResponse.json({ match })
 }
 
 // PATCH /api/matches/[id]
 export async function PATCH(request: Request, { params }: any) {
-  try {
-    const matchId = parseInt(params.id)
-    const { updatedStats } = await request.json()
-    // updatedStats es un array de objetos con { matchPlayerId, goals, assists, saves, turnovers, playTime }
+  const matchId = parseInt(params.id)
+  const { updatedStats, opponentScore } = await request.json()
 
-    // Actualizamos cada matchPlayer
-    const promises = updatedStats.map((mp: any) =>
+  await Promise.all(
+    updatedStats.map((mp: any) =>
       prisma.matchPlayer.update({
         where: { id: mp.matchPlayerId },
         data: {
@@ -44,18 +34,23 @@ export async function PATCH(request: Request, { params }: any) {
           assists: mp.assists,
           saves: mp.saves,
           turnovers: mp.turnovers,
+          shotsOnGoal: mp.shotsOnGoal,
+          shotsOffTarget: mp.shotsOffTarget,
+          recoveries: mp.recoveries,
+          foulsCommitted: mp.foulsCommitted,
+          foulsReceived: mp.foulsReceived,
+          yellowCards: mp.yellowCards,
+          redCards: mp.redCards,
           playTime: mp.playTime,
         },
       })
     )
-    await Promise.all(promises)
+  )
 
-    // (Opcional) Podríamos marcar un campo "finalizado = true" en la tabla Match
-    // await prisma.match.update({ where: { id: matchId }, data: { ... } })
+  await prisma.match.update({
+    where: { id: matchId },
+    data: { opponentScore },
+  })
 
-    return NextResponse.json({ message: 'Partido actualizado correctamente' })
-  } catch (error) {
-    console.error(error)
-    return new NextResponse('Error al actualizar partido', { status: 500 })
-  }
+  return NextResponse.json({ message: 'Partido actualizado correctamente' })
 }

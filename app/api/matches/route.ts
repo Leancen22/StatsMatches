@@ -39,9 +39,17 @@ export async function POST(request: Request) {
             turnovers: 0,
             playTime: 0,
             starter: p.starter,
+            shotsOnGoal:     0,
+            shotsOffTarget:  0,
+            recoveries:      0,
+            foulsCommitted:  0,
+            foulsReceived:   0,
+            yellowCards:     0,
+            redCards:        0,
             // Podríamos guardar también un campo "starter" si quisieras
           })),
         },
+        opponentScore: 0, // Inicialmente 0
       },
       include: {
         matchPlayers: true,

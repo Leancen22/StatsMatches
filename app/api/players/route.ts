@@ -18,9 +18,9 @@ export async function GET() {
 // POST /api/players
 export async function POST(request: Request) {
   try {
-    const { name, position, number } = await request.json()
+    const { name, position, number, category } = await request.json()
 
-    if (!name || !position || !number) {
+    if (!name || !position || !number || !category) {
       return new NextResponse('Datos incompletos', { status: 400 })
     }
 
@@ -29,6 +29,7 @@ export async function POST(request: Request) {
         name,
         position,
         number: Number(number),
+        category
       },
     })
     return NextResponse.json(created)

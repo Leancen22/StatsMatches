@@ -12,13 +12,16 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { BarChart, BarChart2, Eye, LogOut, MailIcon, Play, TrendingUp, UserPlus, Users } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import DarkModeToggle from "@/components/DarkModeToggle"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Tipo en DB
+type Category = "MASCULINO" | "FEMENINO"
 type DBPlayer = {
   id: number
   name: string
   position: string
   number: number
+  category: Category
 }
 
 // Extendemos para UI local
@@ -29,6 +32,8 @@ type PlayerSelection = DBPlayer & {
 
 export default function MatchSetupPage() {
   const router = useRouter()
+
+  const [categoryFilter, setCategoryFilter] = useState<"ALL" | Category>("ALL")
 
   const [players, setPlayers] = useState<PlayerSelection[]>([])
   const [matchInfo, setMatchInfo] = useState({
@@ -54,6 +59,7 @@ export default function MatchSetupPage() {
           selected: false,
           starter: false,
         }))
+        
         setPlayers(withSelection)
       } catch (err) {
         console.error(err)
@@ -77,8 +83,8 @@ export default function MatchSetupPage() {
             return { ...p, selected: false, starter: false }
           }
           // Verificamos límite
-          if (selectedCount >= 10) {
-            setError("No puedes seleccionar más de 10 jugadores")
+          if (selectedCount >= 14) {
+            setError("No puedes seleccionar más de 14 jugadores")
             return p
           }
           // Seleccionar
@@ -121,8 +127,8 @@ export default function MatchSetupPage() {
       setError("Debes seleccionar exactamente 5 jugadores titulares")
       return
     }
-    if (substitutesCount !== 5) {
-      setError("Debes seleccionar exactamente 5 jugadores suplentes")
+    if (substitutesCount !== 9) {
+      setError("Debes seleccionar exactamente 9 jugadores suplentes")
       return
     }
     if (!matchInfo.opponent || !matchInfo.date || !matchInfo.location) {
@@ -245,7 +251,7 @@ export default function MatchSetupPage() {
               <h2 className="text-2xl font-bold tracking-tight">Configuración del Partido</h2>
               <Button
                 onClick={startMatch}
-                disabled={starterCount !== 5 || substitutesCount !== 5}
+                disabled={starterCount !== 5 || substitutesCount !== 9}
                 size="lg"
                 className="text-lg py-6"
               >
@@ -267,6 +273,32 @@ export default function MatchSetupPage() {
                 <CardTitle className="text-xl">Información del Partido</CardTitle>
               </CardHeader>
               <CardContent>
+              <div className="flex items-center mb-4 gap-2">
+               <Label className="whitespace-nowrap">Filtrar:</Label>
+               <Select
+                 value={categoryFilter}
+                 onValueChange={(val: string) =>
+                           setCategoryFilter(val as "ALL" | Category)
+                         }
+               >
+                 <SelectTrigger className="w-32 h-10 text-lg">
+                   <SelectValue
+                     placeholder={
+                       categoryFilter === "ALL"
+                         ? "Todos"
+                         : categoryFilter === "MASCULINO"
+                         ? "Masculino"
+                         : "Femenino"
+                     }
+                   />
+                 </SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="ALL">Todos</SelectItem>
+                   <SelectItem value="MASCULINO">Masculino</SelectItem>
+                   <SelectItem value="FEMENINO">Femenino</SelectItem>
+                 </SelectContent>
+               </Select>
+             </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="opponent" className="text-lg">
@@ -324,15 +356,15 @@ export default function MatchSetupPage() {
                   <div className="bg-muted p-3 rounded-lg">
                     Suplentes:{" "}
                     <span
-                      className={substitutesCount === 5 ? "text-green-500 font-bold" : "text-amber-500 font-bold"}
+                      className={substitutesCount === 9 ? "text-green-500 font-bold" : "text-amber-500 font-bold"}
                     >
-                      {substitutesCount}/5
+                      {substitutesCount}/9
                     </span>
                   </div>
                   <div className="bg-muted p-3 rounded-lg">
                     Total:{" "}
-                    <span className={selectedCount === 10 ? "text-green-500 font-bold" : "text-amber-500 font-bold"}>
-                      {selectedCount}/10
+                    <span className={selectedCount === 14 ? "text-green-500 font-bold" : "text-amber-500 font-bold"}>
+                      {selectedCount}/14
                     </span>
                   </div>
                 </div>
@@ -347,7 +379,13 @@ export default function MatchSetupPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {players.map((player) => (
+                    {players
+                  .filter((p) =>
+                    categoryFilter === "ALL"
+                      ? true
+                      : p.category === categoryFilter
+                  )
+                  .map((player) => (
                       <TableRow key={player.id}>
                         <TableCell className="text-lg font-medium">{player.number}</TableCell>
                         <TableCell className="text-lg font-medium">{player.name}</TableCell>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -22,16 +22,32 @@ type PlayerStats = {
     assists: number
     saves: number
     turnovers: number
-    playTime: number // en segundos
+    shotsOnGoal: number
+    shotsOffTarget: number
+    recoveries: number
+    foulsCommitted: number
+    foulsReceived: number
+    yellowCards: number
+    redCards: number
+    playTime: number
   }
   averageStats: {
     goals: number
     assists: number
     saves: number
     turnovers: number
-    playTime: number // en segundos
+    shotsOnGoal: number
+    shotsOffTarget: number
+    recoveries: number
+    foulsCommitted: number
+    foulsReceived: number
+    yellowCards: number
+    redCards: number
+    playTime: number// en segundos
   }
 }
+
+
 
 type Match = {
   id: number
@@ -77,40 +93,64 @@ export default function StatsPage() {
 
   // Función para formatear el tiempo (segundos a HH:MM)
   const formatTime = (seconds: number) => {
+    const total = Math.floor(seconds);
     // Horas = total de segundos / 3600
-    const hours = Math.floor(seconds / 3600)
+    const hours = Math.floor(total / 3600)
     // Minutos = lo que sobra después de quitar las horas, / 60
-    const mins = Math.floor((seconds % 3600) / 60)
+    const mins = Math.floor((total % 3600) / 60)
     // Segundos = lo que sobra después de quitar minutos
-    const secs = seconds % 60
+    const secs = total % 60
   
     // Retorno en formato “HHh MMm SSs”
     return `${hours}h ${mins}m ${secs}s`
   }
 
+  const calculateEfficiency = (s: PlayerStats["stats"]) => {
+    return (
+      s.goals +
+      s.assists +
+      s.saves +
+      s.recoveries -
+      s.turnovers -
+      s.shotsOffTarget -
+      s.foulsCommitted -
+      s.foulsReceived -
+      s.yellowCards -
+      s.redCards
+    );
+  };
+
   // Función para ordenar jugadores según la estadística seleccionada
-  const sortedPlayers = [...players].sort((a, b) => {
-    if (sortBy === "goals") return b.stats.goals - a.stats.goals
-    if (sortBy === "assists") return b.stats.assists - a.stats.assists
-    if (sortBy === "saves") return b.stats.saves - a.stats.saves
-    if (sortBy === "efficiency")
-      return b.stats.goals + b.stats.assists - b.stats.turnovers - (a.stats.goals + a.stats.assists - a.stats.turnovers)
-    if (sortBy === "playTime") return b.stats.playTime - a.stats.playTime
-    return 0
-  })
+  const sortedPlayers = useMemo(() => {
+    return [...players].sort((a, b) => {
+      if (sortBy === "goals") return b.stats.goals - a.stats.goals;
+      if (sortBy === "assists") return b.stats.assists - a.stats.assists;
+      if (sortBy === "saves") return b.stats.saves - a.stats.saves;
+      if (sortBy === "efficiency")
+        return (
+          calculateEfficiency(b.stats) - calculateEfficiency(a.stats)
+        );
+      if (sortBy === "playTime")
+        return b.stats.playTime - a.stats.playTime;
+      return 0;
+    });
+  }, [players, sortBy]);
 
   // Función para calcular la eficiencia
-  const calculateEfficiency = (player: PlayerStats) => {
-    return player.stats.goals + player.stats.assists - player.stats.turnovers
-  }
+  
 
   // Función para determinar el color de la eficiencia
-  const getEfficiencyColor = (efficiency: number) => {
-    if (efficiency > 30) return "text-green-500"
-    if (efficiency > 15) return "text-emerald-500"
-    if (efficiency > 0) return "text-amber-500"
-    return "text-red-500"
-  }
+  const getEfficiencyColor = (e: number) => {
+    if (e > 50) return "text-green-600";
+    if (e > 20) return "text-green-500";
+    if (e > 0) return "text-amber-500";
+    return "text-red-500";
+  };
+
+  const totalPartidos = matches.length;
+  const totalJugadores = players.length;
+  const totalGoles = players.reduce((sum, p) => sum + p.stats.goals, 0);
+
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -244,43 +284,70 @@ export default function StatsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[80px] text-lg">Núm.</TableHead>
-                          <TableHead className="text-lg">Jugador</TableHead>
-                          <TableHead className="text-center text-lg">Partidos</TableHead>
-                          <TableHead className="text-center text-lg">Goles</TableHead>
-                          <TableHead className="text-center text-lg">Asistencias</TableHead>
-                          <TableHead className="text-center text-lg">Atajadas</TableHead>
-                          <TableHead className="text-center text-lg">Pérdidas</TableHead>
-                          <TableHead className="text-center text-lg">Tiempo</TableHead>
-                          <TableHead className="text-center text-lg">Eficiencia</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {sortedPlayers.map((player) => (
-                          <TableRow key={player.id}>
-                            <TableCell className="text-lg font-bold">{player.number}</TableCell>
-                            <TableCell>
-                              <div className="text-lg font-medium">{player.name}</div>
-                              <div className="text-sm text-muted-foreground">{player.position}</div>
-                            </TableCell>
-                            <TableCell className="text-center text-lg">{player.matches}</TableCell>
-                            <TableCell className="text-center text-lg font-bold">{player.stats.goals}</TableCell>
-                            <TableCell className="text-center text-lg font-bold">{player.stats.assists}</TableCell>
-                            <TableCell className="text-center text-lg font-bold">{player.stats.saves}</TableCell>
-                            <TableCell className="text-center text-lg font-bold">{player.stats.turnovers}</TableCell>
-                            <TableCell className="text-center text-lg">{formatTime(player.stats.playTime)}</TableCell>
-                            <TableCell className="text-center text-lg">
-                              <span className={`font-bold ${getEfficiencyColor(calculateEfficiency(player))}`}>
-                                {calculateEfficiency(player)}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                  <Table>
+                  <TableHeader>
+                    <TableRow>
+                      
+                      <TableHead className="w-[60px] text-lg">Núm.</TableHead>
+                      <TableHead className="w-[100px] text-lg">Jugador</TableHead>
+                      <TableHead className="w-[80px] text-center text-lg">Tiempo</TableHead>
+                      <TableHead className="text-center">Goles</TableHead>
+                      <TableHead className="text-center">Asist.</TableHead>
+                      <TableHead className="text-center">SA</TableHead>
+                      <TableHead className="text-center">SF</TableHead>
+                      <TableHead className="text-center">Perd.</TableHead>
+                      <TableHead className="text-center">Recup.</TableHead>
+                      <TableHead className="text-center">F.C.</TableHead>
+                      <TableHead className="text-center">F.R.</TableHead>
+                      <TableHead className="text-center">Amar.</TableHead>
+                      <TableHead className="text-center">Roja</TableHead>
+                      
+
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedPlayers.map((player) => (
+                      <TableRow key={player.id}>
+                        <TableCell className="text-lg font-bold">{player.number}</TableCell>
+                        <TableCell>
+                          <div className="text-lg font-medium">{player.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {player.position}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center text-lg">
+                          {formatTime(player.stats.playTime)}
+                        </TableCell>
+                        <TableCell className="text-center">{player.stats.goals}</TableCell>
+                        <TableCell className="text-center">{player.stats.assists}</TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.shotsOnGoal}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.shotsOffTarget}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.turnovers}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.recoveries}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.foulsCommitted}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.foulsReceived}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.yellowCards}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {player.stats.redCards}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
                   </CardContent>
                 </Card>
 
@@ -323,6 +390,7 @@ export default function StatsPage() {
                             </TableCell>
                             <TableCell className="text-center text-lg">
                               {formatTime(player.averageStats.playTime)}
+                              
                             </TableCell>
                           </TableRow>
                         ))}

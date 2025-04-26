@@ -20,6 +20,16 @@ export async function GET() {
       let totalSaves = 0
       let totalTurnovers = 0
       let totalPlayTime = 0
+      let totalShotsOnGoal = 0
+      let totalShotsOffTarget = 0  
+      let totalRecoveries = 0      
+      let totalFoulsCommitted = 0  
+      let totalFoulsReceived = 0   
+      let totalYellowCards = 0     
+      let totalRedCards = 0        
+
+
+      
 
       p.matches.forEach((mp: any) => {
         totalGoals += mp.goals
@@ -27,6 +37,13 @@ export async function GET() {
         totalSaves += mp.saves
         totalTurnovers += mp.turnovers
         totalPlayTime += mp.playTime
+        totalShotsOnGoal += mp.shotsOnGoal
+        totalShotsOffTarget += mp.shotsOffTarget
+        totalRecoveries += mp.recoveries
+        totalFoulsCommitted += mp.foulsCommitted
+        totalFoulsReceived += mp.foulsReceived
+        totalYellowCards += mp.yellowCards
+        totalRedCards += mp.redCards
         console.log(
           `stats-players: PlayerId=${p.id}, MatchPlayerId=${mp.id}, playTime=${mp.playTime}`
         )
@@ -38,6 +55,13 @@ export async function GET() {
       const avgSaves = totalMatches ? totalSaves / totalMatches : 0
       const avgTurnovers = totalMatches ? totalTurnovers / totalMatches : 0
       const avgPlayTime = totalMatches ? totalPlayTime / totalMatches : 0
+      const avgShotsOnGoal = totalMatches ? totalShotsOnGoal / totalMatches : 0
+      const avgShotsOffTarget = totalMatches ? totalShotsOffTarget / totalMatches : 0
+      const avgRecoveries = totalMatches ? totalRecoveries / totalMatches : 0
+      const avgFoulsCommitted = totalMatches ? totalFoulsCommitted / totalMatches : 0
+      const avgFoulsReceived = totalMatches ? totalFoulsReceived / totalMatches : 0
+      const avgYellowCards = totalMatches ? totalYellowCards / totalMatches : 0
+      const avgRedCards = totalMatches ? totalRedCards / totalMatches : 0
 
       return {
         id: p.id,
@@ -50,6 +74,13 @@ export async function GET() {
           assists: totalAssists,
           saves: totalSaves,
           turnovers: totalTurnovers,
+          shotsOnGoal: totalShotsOnGoal,
+          shotsOffTarget: totalShotsOffTarget, 
+          recoveries: totalRecoveries,
+          foulsCommitted: totalFoulsCommitted,
+          foulsReceived: totalFoulsReceived,
+          yellowCards: totalYellowCards,
+          redCards: totalRedCards,
           playTime: totalPlayTime,
         },
         averageStats: {
@@ -58,6 +89,15 @@ export async function GET() {
           saves: avgSaves,
           turnovers: avgTurnovers,
           playTime: avgPlayTime,
+
+          shotsOnGoal: avgShotsOnGoal,
+          shotsOffTarget: avgShotsOffTarget,
+          recoveries: avgRecoveries,
+          foulsCommitted: avgFoulsCommitted,
+          foulsReceived: avgFoulsReceived,
+          yellowCards: avgYellowCards,
+          redCards: avgRedCards,
+          
         },
       }
     })

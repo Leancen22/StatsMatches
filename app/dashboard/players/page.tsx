@@ -18,6 +18,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { BarChart, BarChart2, LogOut, Plus, TrendingUp, Users, Eye, MailIcon } from "lucide-react"
 import DarkModeToggle from "@/components/DarkModeToggle"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+
+type Category = "MASCULINO" | "FEMENINO"
 
 // Tipo para los jugadores que llegan del backend
 type Player = {
@@ -25,11 +29,12 @@ type Player = {
   name: string
   position: string
   number: number
+  category: Category
 }
 
 export default function PlayersPage() {
   const [players, setPlayers] = useState<Player[]>([])
-  const [newPlayer, setNewPlayer] = useState({ name: "", position: "", number: "" })
+  const [newPlayer, setNewPlayer] = useState({ name: "", position: "", number: "", category: "MASCULINO" as Category, })
 
   // Al montar, cargamos los jugadores desde la DB:
   useEffect(() => {
@@ -46,7 +51,7 @@ export default function PlayersPage() {
   }, [])
 
   const handleAddPlayer = async () => {
-    if (!newPlayer.name || !newPlayer.position || !newPlayer.number) return
+    if (!newPlayer.name || !newPlayer.position || !newPlayer.number || !newPlayer.category) return
 
     try {
       const res = await fetch("/api/players", {
@@ -56,6 +61,7 @@ export default function PlayersPage() {
           name: newPlayer.name,
           position: newPlayer.position,
           number: Number(newPlayer.number),
+          category: newPlayer.category,
         }),
       })
       if (!res.ok) {
@@ -66,7 +72,7 @@ export default function PlayersPage() {
       // Agregamos el nuevo jugador al estado local
       setPlayers((prev) => [...prev, created])
       // Limpiamos el formulario
-      setNewPlayer({ name: "", position: "", number: "" })
+      setNewPlayer({ name: "", position: "", number: "", category: "MASCULINO" })
     } catch (error) {
       console.error(error)
       alert("Error al crear jugador")
@@ -192,6 +198,23 @@ export default function PlayersPage() {
                         onChange={(e) => setNewPlayer({ ...newPlayer, number: e.target.value })}
                       />
                     </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="category">Categoría</Label>
+                      <Select
+                        value={newPlayer.category}
+                        onValueChange={(val) =>
+                          setNewPlayer({ ...newPlayer, category: val as Category })
+                        }
+                      >
+                        <SelectTrigger id="category">
+                          <SelectValue placeholder="Selecciona categoría" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="MASCULINO">Masculino</SelectItem>
+                          <SelectItem value="FEMENINO">Femenino</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <DialogFooter>
                     <Button onClick={handleAddPlayer}>Guardar</Button>
@@ -212,6 +235,8 @@ export default function PlayersPage() {
                       <TableHead>Número</TableHead>
                       <TableHead>Nombre</TableHead>
                       <TableHead>Posición</TableHead>
+                      <TableHead>Categoria</TableHead>
+                      
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -221,6 +246,9 @@ export default function PlayersPage() {
                         <TableCell>{player.number}</TableCell>
                         <TableCell>{player.name}</TableCell>
                         <TableCell>{player.position}</TableCell>
+                        <TableCell>
+                          {player.category === "MASCULINO" ? "Masculino" : "Femenino"}
+                        </TableCell>
                         <TableCell className="text-right">
                           <Button variant="outline" size="sm">
                             Editar

@@ -7,17 +7,34 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Category {
+  MASCULINO
+  FEMENINO
+}
+
+
 model Player {
   id       Int      @id @default(autoincrement())
   name     String
   position String
   number   Int
 
+
+  category   Category  @default(MASCULINO)
+
+
   // (Opcional) Campos con estadísticas acumuladas
-  totalGoals     Int @default(0)
-  totalAssists   Int @default(0)
-  totalSaves     Int @default(0)
-  totalTurnovers Int @default(0)
+  totalGoals           Int @default(0)
+  totalAssists         Int @default(0)
+  totalSaves           Int @default(0)
+  totalTurnovers       Int @default(0)
+  totalShotsOnGoal     Int @default(0)
+  totalShotsOffTarget  Int @default(0)
+  totalRecoveries      Int @default(0)
+  totalFoulsCommitted  Int @default(0)
+  totalFoulsReceived   Int @default(0)
+  totalYellowCards     Int @default(0)
+  totalRedCards        Int @default(0)
 
   matches  MatchPlayer[]
 }
@@ -30,6 +47,8 @@ model Match {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
+  opponentScore Int         @default(0)
+
   matchPlayers MatchPlayer[]
 }
 
@@ -37,10 +56,18 @@ model MatchPlayer {
   id        Int     @id @default(autoincrement())
   matchId   Int
   playerId  Int
-  goals     Int     @default(0)
-  assists   Int     @default(0)
-  saves     Int     @default(0)
-  turnovers Int     @default(0)
+  
+  goals            Int     @default(0)
+  assists          Int     @default(0)
+  saves            Int     @default(0)
+  turnovers        Int     @default(0)
+  shotsOnGoal      Int     @default(0)
+  shotsOffTarget   Int     @default(0)
+  recoveries       Int     @default(0)
+  foulsCommitted   Int     @default(0)
+  foulsReceived    Int     @default(0)
+  yellowCards      Int     @default(0)
+  redCards         Int     @default(0)
   playTime  Int     @default(0) // segundos 
   
   starter   Boolean  @default(false)

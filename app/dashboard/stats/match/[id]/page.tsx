@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,7 @@ type Match = {
   opponent: string
   date: string
   location: string
+  opponentScore: number
   // Podrías guardar "result" o un campo "finalizado" aquí
   // y la relación con matchPlayers
 }
@@ -26,6 +27,13 @@ type MatchPlayer = {
   assists: number
   saves: number
   turnovers: number
+  shotsOnGoal: number
+  shotsOffTarget: number
+  recoveries: number
+  foulsCommitted: number
+  foulsReceived: number
+  yellowCards: number
+  redCards: number  
   playTime: number
   player: {
     id: number
@@ -40,6 +48,17 @@ export default function MatchDetailsPage() {
   const router = useRouter()
   const [match, setMatch] = useState<Match | null>(null)
   const [players, setPlayers] = useState<MatchPlayer[]>([])
+
+  const teamScore = useMemo(() => {
+    return players.reduce((sum, mp) => sum + mp.goals, 0);
+  }, [players]);
+
+  const resultText = useMemo(() => {
+    if (!match) return "";
+    if (teamScore > match.opponentScore) return "Victoria 🎉";
+    if (teamScore < match.opponentScore) return "Derrota 😞";
+    return "Empate 🤝";
+  }, [match, teamScore]);
 
   useEffect(() => {
     const fetchMatchDetails = async () => {
@@ -64,6 +83,7 @@ export default function MatchDetailsPage() {
           opponent: data.match.opponent,
           date: data.match.date,
           location: data.match.location || "",
+          opponentScore: data.match.opponentScore ?? 0,
         })
         setPlayers(data.match.matchPlayers)
       } catch (error) {
@@ -193,6 +213,13 @@ export default function MatchDetailsPage() {
                 <p className="text-lg">
                   Ubicación: <strong>{match.location}</strong>
                 </p>
+                <hr />
+              <div className="flex items-center space-x-4">
+                <span className="text-2xl font-bold">{teamScore}</span>
+                <span className="text-2xl">–</span>
+                <span className="text-2xl font-bold">{match.opponentScore}</span>
+                <span className="ml-4 text-lg">{resultText}</span>
+              </div>
               </CardContent>
             </Card>
 
@@ -203,15 +230,21 @@ export default function MatchDetailsPage() {
               <CardContent>
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[80px] text-lg">Núm.</TableHead>
-                      <TableHead className="text-lg">Jugador</TableHead>
-                      <TableHead className="text-center text-lg">Posición</TableHead>
-                      <TableHead className="text-center text-lg">Goles</TableHead>
-                      <TableHead className="text-center text-lg">Asistencias</TableHead>
-                      <TableHead className="text-center text-lg">Atajadas</TableHead>
-                      <TableHead className="text-center text-lg">Pérdidas</TableHead>
-                      <TableHead className="text-center text-lg">Tiempo Jugado</TableHead>
+                  <TableRow>
+                      <TableHead className="w-[60px] text-lg">Núm.</TableHead>
+                      <TableHead className="w-[100px] text-lg">Jugador</TableHead>
+                      <TableHead className="text-center">Goles</TableHead>
+                      <TableHead className="text-center">Asist.</TableHead>
+                      <TableHead className="text-center">SA</TableHead>
+                      <TableHead className="text-center">SF</TableHead>
+                      <TableHead className="text-center">Perd.</TableHead>
+                      <TableHead className="text-center">Recup.</TableHead>
+                      <TableHead className="text-center">F.C.</TableHead>
+                      <TableHead className="text-center">F.R.</TableHead>
+                      <TableHead className="text-center">Amar.</TableHead>
+                      <TableHead className="text-center">Roja</TableHead>
+                      <TableHead className="w-[80px] text-center text-lg">Tiempo</TableHead>
+
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -223,20 +256,31 @@ export default function MatchDetailsPage() {
                         <TableCell className="text-lg">
                           {mp.player.name}
                         </TableCell>
-                        <TableCell className="text-center text-lg">
-                          {mp.player.position}
+                        <TableCell className="text-center">{mp.goals}</TableCell>
+                        <TableCell className="text-center">{mp.assists}</TableCell>
+                        <TableCell className="text-center">
+                          {mp.shotsOnGoal}
                         </TableCell>
-                        <TableCell className="text-center text-lg font-bold">
-                          {mp.goals}
+                        <TableCell className="text-center">
+                          {mp.shotsOffTarget}
                         </TableCell>
-                        <TableCell className="text-center text-lg font-bold">
-                          {mp.assists}
-                        </TableCell>
-                        <TableCell className="text-center text-lg font-bold">
-                          {mp.saves}
-                        </TableCell>
-                        <TableCell className="text-center text-lg font-bold">
+                        <TableCell className="text-center">
                           {mp.turnovers}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {mp.recoveries}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {mp.foulsCommitted}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {mp.foulsReceived}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {mp.yellowCards}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {mp.redCards}
                         </TableCell>
                         <TableCell className="text-center text-lg">
                           {formatTime(mp.playTime)}
